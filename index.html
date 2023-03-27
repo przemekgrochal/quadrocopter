@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quadrocopter</title>
+</head>
+
+<body>
+   
+    <script>
+        // funkcja obliczająca odległość między dwoma punktami
+        function distance(x1, y1, x2, y2) {
+            return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+        }
+
+        // funkcja sprawdzająca, czy dany punkt znajduje się w zasięgu nadajnika
+        function inRange(x, y, tx, ty, tpower) {
+            return distance(x, y, tx, ty) <= tpower;
+        }
+
+        // wczytanie liczby nadajników
+        const numTransmitters = parseInt(prompt("Podaj liczbę nadajników:"));
+
+        // wczytanie danych o nadajnikach
+        const transmitters = [];
+        for (let i = 0; i < numTransmitters; i++) {
+            const transmitterData = prompt(`Podaj dane nadajnika ${i + 1}:`).split(" ");
+            const transmitter = {
+                x: parseInt(transmitterData[0]),
+                y: parseInt(transmitterData[1]),
+                power: parseInt(transmitterData[2])
+            };
+            transmitters.push(transmitter);
+        }
+
+        // wczytanie danych o punkcie początkowym i końcowym
+        const startPoint = prompt("Podaj współrzędne punktu początkowego:").split(" ");
+        const startX = parseInt(startPoint[0]);
+        const startY = parseInt(startPoint[1]);
+
+        const endPoint = prompt("Podaj współrzędne punktu końcowego:").split(" ");
+        const endX = parseInt(endPoint[0]);
+        const endY = parseInt(endPoint[1]);
+
+        // sprawdzenie, czy istnieje bezpieczny przelot
+        let safeFlight = false;
+        for (let i = 0; i < transmitters.length; i++) {
+            const transmitter = transmitters[i];
+            if (inRange(startX, startY, transmitter.x, transmitter.y, transmitter.power) &&
+                inRange(endX, endY, transmitter.x, transmitter.y, transmitter.power)) {
+                safeFlight = true;
+                break;
+            }
+        }
+
+        // wypisanie wyniku
+        if (safeFlight) {
+            console.log("Bezpieczny przelot jest możliwy.");
+        } else {
+            console.log("Bezpieczny przelot nie jest możliwy.");
+        }
+    </script>
+</body>
+
+</html>
